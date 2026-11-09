@@ -3,240 +3,894 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Black history, asked and sourced</title>
+<title>Black History — Asked & Sourced</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --paper: #eef1ec;
-    --card: #ffffff;
-    --ink: #1e2620;
-    --muted: #5b675e;
-    --line: #cfd6cf;
-    --teal: #1f6f66;
-    --umber: #8a5a2b;
-    --error: #a3352b;
-    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
-    --sans: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    color-scheme: light;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #141a16;
-      --card: #1c241f;
-      --ink: #e4eae5;
-      --muted: #9aa89e;
-      --line: #2f3b33;
-      --teal: #6cc3b6;
-      --umber: #d9a86c;
-      --error: #e58a80;
-      color-scheme: dark;
-    }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans); }
-  main { max-width: 720px; margin: 0 auto; padding: 64px 20px 40px; }
+/* ───────── RESET & TOKENS ───────── */
+:root {
+  --bg:       #0d0d0d;
+  --surface:  #161616;
+  --card:     #1c1c1c;
+  --card-hover: #232323;
+  --ink:      #f0ece4;
+  --ink-dim:  #a8a49c;
+  --ink-muted:#6b675f;
+  --accent:   #c9a84c;
+  --accent-dim:#8b7534;
+  --red:      #c0392b;
+  --red-soft: #e74c3c;
+  --teal:     #2ecc71;
+  --border:   #2a2a2a;
+  --serif:    "Playfair Display", Georgia, serif;
+  --sans:     "Inter", system-ui, -apple-system, sans-serif;
+  --radius:   8px;
+  --shadow:   0 4px 24px rgba(0,0,0,.4);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+img { display: block; max-width: 100%; }
 
-  h1 { font: 600 clamp(2rem, 6vw, 3rem)/1.08 var(--serif); letter-spacing: -0.015em; margin: 0 0 14px; max-width: 14em; }
-  .intro { margin: 0 0 36px; color: var(--muted); max-width: 36em; }
+/* ───────── SKIP LINK ───────── */
+.skip { position:absolute; left:-999px; top:4px; padding:8px 16px; background:var(--accent); color:var(--bg); font-weight:600; border-radius:4px; z-index:100; }
+.skip:focus { left:8px; }
 
-  form { display: flex; gap: 8px; }
-  input[type="text"] {
-    flex: 1;
-    min-width: 0;
-    padding: 13px 14px;
-    font: 17px var(--sans);
-    color: var(--ink);
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-  }
-  button.ask {
-    padding: 0 22px;
-    font: 600 15px var(--sans);
-    color: var(--card);
-    background: var(--teal);
-    border: 0;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button.ask:disabled { opacity: 0.55; cursor: progress; }
-  input:focus-visible, button:focus-visible, a:focus-visible {
-    outline: 3px solid var(--teal);
-    outline-offset: 2px;
-  }
+/* ───────── HEADER / NAV ───────── */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,13,13,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+}
+.nav-brand {
+  font: 700 1.15rem var(--serif);
+  color: var(--ink);
+  letter-spacing: .02em;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-brand svg { flex-shrink: 0; }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  color: var(--ink-dim);
+  font: 500 .82rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  transition: color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--accent); text-decoration: none; }
 
-  .agent { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 14px; color: var(--muted); }
-  .agent input { accent-color: var(--teal); width: 16px; height: 16px; }
+/* ───────── HERO ───────── */
+.hero {
+  position: relative;
+  min-height: 520px;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a120b 0%, #0d0d0d 50%, #0b1a14 100%);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,168,76,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 20% 60%, rgba(192,57,43,.08) 0%, transparent 70%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 1280px; width: 100%; margin: 0 auto;
+  padding: 80px 24px 56px;
+}
+.hero-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 .72rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.hero-label::before {
+  content: ""; display: block; width: 32px; height: 2px; background: var(--accent);
+}
+.hero h1 {
+  font: 900 clamp(2.4rem, 6vw, 4rem)/1.08 var(--serif);
+  max-width: 16em;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--ink) 30%, var(--accent) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-desc {
+  max-width: 42em;
+  font-size: 1.05rem;
+  color: var(--ink-dim);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+.hero-stats {
+  display: flex; gap: 40px; flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex; flex-direction: column;
+}
+.hero-stat strong {
+  font: 700 1.6rem var(--serif);
+  color: var(--accent);
+}
+.hero-stat span {
+  font-size: .78rem;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
 
-  .examples { margin: 28px 0 0; padding: 0; list-style: none; }
-  .examples p { margin: 0 0 6px; font-size: 14px; color: var(--muted); }
-  .examples button {
-    display: block;
-    padding: 3px 0;
-    font: 15px var(--sans);
-    text-align: left;
-    color: var(--teal);
-    background: none;
-    border: 0;
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-color: var(--line);
-    text-underline-offset: 4px;
-  }
-  .examples button:hover { text-decoration-color: var(--teal); }
+/* ───────── SECTION TITLES ───────── */
+.section-header {
+  max-width: 1280px; margin: 0 auto;
+  padding: 64px 24px 28px;
+  display: flex; align-items: center; gap: 16px;
+}
+.section-header h2 {
+  font: 700 1.6rem var(--serif);
+  color: var(--ink);
+}
+.section-header::after {
+  content: ""; flex: 1; height: 1px; background: var(--border);
+}
 
-  #result { margin-top: 48px; }
-  .status { color: var(--muted); }
-  .error { color: var(--error); }
+/* ───────── ASK SECTION ───────── */
+#ask-section {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px 48px;
+}
+.ask-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.ask-box::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--red-soft), var(--accent));
+}
+.ask-intro {
+  font: 500 .85rem var(--sans);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 8px;
+}
+.ask-title {
+  font: 700 1.35rem var(--serif);
+  margin-bottom: 20px;
+}
+.ask-form {
+  display: flex; gap: 10px;
+}
+.ask-input {
+  flex: 1; min-width: 0;
+  padding: 15px 18px;
+  font: 400 1rem var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color .2s;
+}
+.ask-input::placeholder { color: var(--ink-muted); }
+.ask-input:focus { border-color: var(--accent); }
+.ask-btn {
+  padding: 0 28px;
+  font: 600 .88rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--bg);
+  background: var(--accent);
+  border: 0; border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+  white-space: nowrap;
+}
+.ask-btn:hover { background: #d4b254; }
+.ask-btn:active { transform: scale(.97); }
+.ask-btn:disabled { opacity: .5; cursor: progress; }
 
-  .asked { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
-  .answer-text { margin: 0; font: 1.4rem/1.55 var(--serif); }
-  .answer-text sup a {
-    font: 600 0.62em var(--sans);
-    color: var(--umber);
-    text-decoration: none;
-    padding: 0 1px;
-  }
+.ask-options {
+  display: flex; align-items: center; gap: 24px;
+  margin-top: 16px; flex-wrap: wrap;
+}
+.ask-agent {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .85rem; color: var(--ink-dim); cursor: pointer;
+}
+.ask-agent input { accent-color: var(--accent); width: 16px; height: 16px; }
 
-  /* Footnotes: the sources behind the answer, like the notes at the end of a history book. */
-  .notes { margin: 28px 0 0; padding: 18px 0 0 22px; border-top: 1px solid var(--line); font-size: 15px; }
-  .notes li { margin-bottom: 14px; padding-left: 4px; }
-  .notes li::marker { font: 600 13px var(--sans); color: var(--umber); }
-  .notes a.title { color: var(--ink); font-weight: 500; text-decoration-color: var(--line); text-underline-offset: 3px; }
-  .notes a.title:hover { text-decoration-color: var(--ink); }
-  .notes button.show {
-    margin-left: 8px;
-    padding: 0;
-    font: 13px var(--sans);
-    color: var(--teal);
-    background: none;
-    border: 0;
-    cursor: pointer;
-  }
-  .excerpt {
-    margin: 10px 0 0;
-    padding: 4px 0 4px 16px;
-    border-left: 2px solid var(--umber);
-    font: 16px/1.65 var(--serif);
-    white-space: pre-wrap;
-  }
-  .excerpt[hidden] { display: none; }
-  :target { scroll-margin-top: 24px; }
+.examples-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 16px;
+}
+.example-chip {
+  padding: 7px 16px;
+  font: 400 .82rem var(--sans);
+  color: var(--ink-dim);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.example-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+  background: rgba(201,168,76,.06);
+}
 
-  footer { margin-top: 72px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
-  footer a { color: var(--teal); }
+/* ───────── RESULT ───────── */
+#result {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px 48px;
+}
+#result:empty { display: none; }
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  animation: fadeUp .4s ease-out;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.result-question {
+  font: 500 .78rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.result-answer {
+  font: 400 1.35rem/1.65 var(--serif);
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.result-answer sup a {
+  font: 700 .55em var(--sans);
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0 2px;
+  vertical-align: super;
+}
+.result-answer sup a:hover { text-decoration: underline; }
+.result-status {
+  font-size: .95rem; color: var(--ink-dim);
+  display: flex; align-items: center; gap: 10px;
+}
+.result-status.error { color: var(--red-soft); }
+.result-status .spinner {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  @media (max-width: 520px) {
-    main { padding-top: 36px; }
-    form { flex-direction: column; }
-    button.ask { padding: 12px; }
-    .answer-text { font-size: 1.25rem; }
-  }
+/* Footnotes / Sources */
+.sources-title {
+  margin-top: 32px; padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font: 600 .78rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+}
+.source-list { list-style: none; padding: 0; }
+.source-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.source-item:last-child { border-bottom: 0; }
+.source-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font: 700 .72rem var(--sans);
+  color: var(--bg);
+  background: var(--accent);
+  border-radius: 50%;
+}
+.source-body { flex: 1; min-width: 0; }
+.source-link {
+  font: 500 .95rem var(--sans);
+  color: var(--ink);
+  display: inline-block; margin-bottom: 4px;
+}
+.source-link:hover { color: var(--accent); }
+.source-toggle {
+  font: 500 .78rem var(--sans);
+  color: var(--accent);
+  background: none; border: 0; cursor: pointer;
+  padding: 0; margin-left: 12px;
+}
+.source-toggle:hover { text-decoration: underline; }
+.source-excerpt {
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-left: 3px solid var(--accent-dim);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font: 400 .88rem/1.7 var(--serif);
+  color: var(--ink-dim);
+  white-space: pre-wrap;
+}
+.source-excerpt[hidden] { display: none; }
+
+/* ───────── TOPICS GRID ───────── */
+.topics-grid {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px 64px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.topic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px 24px;
+  cursor: pointer;
+  transition: all .25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.topic-card::before {
+  content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.topic-card:hover {
+  background: var(--card-hover);
+  border-color: var(--accent-dim);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+.topic-card:hover::before { transform: scaleX(1); }
+.topic-tag {
+  display: inline-block;
+  font: 600 .62rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+.tag-slavery       { color: #e74c3c; background: rgba(231,76,60,.12); }
+.tag-civil-rights  { color: #3498db; background: rgba(52,152,219,.12); }
+.tag-leaders       { color: #2ecc71; background: rgba(46,204,113,.12); }
+.tag-legislation   { color: #9b59b6; background: rgba(155,89,182,.12); }
+.tag-culture       { color: #e67e22; background: rgba(230,126,34,.12); }
+.tag-global        { color: #1abc9c; background: rgba(26,188,156,.12); }
+.topic-card h3 {
+  font: 700 1.05rem var(--serif);
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.topic-card p {
+  font-size: .82rem;
+  color: var(--ink-dim);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.topic-card .read-arrow {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 14px;
+  font: 500 .75rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--accent);
+  transition: gap .2s;
+}
+.topic-card:hover .read-arrow { gap: 8px; }
+
+/* ───────── TIMELINE ───────── */
+.timeline {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 24px 72px;
+}
+.tl-track {
+  position: relative;
+  padding-left: 40px;
+}
+.tl-track::before {
+  content: ""; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--border) 100%);
+}
+.tl-item {
+  position: relative;
+  padding: 0 0 40px;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-dot {
+  position: absolute; left: -33px; top: 4px;
+  width: 14px; height: 14px;
+  background: var(--bg);
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  z-index: 2;
+}
+.tl-year {
+  font: 700 .72rem var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.tl-title {
+  font: 700 1.05rem var(--serif);
+  margin-bottom: 6px;
+}
+.tl-desc {
+  font-size: .85rem;
+  color: var(--ink-dim);
+  max-width: 42em;
+}
+
+/* ───────── FOOTER ───────── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.footer-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 36px 24px;
+  display: flex; flex-wrap: wrap; gap: 16px 40px;
+  font-size: .8rem; color: var(--ink-muted);
+}
+footer a { color: var(--accent); }
+
+/* ───────── RESPONSIVE ───────── */
+@media (max-width: 700px) {
+  .nav-links { display: none; }
+  .hero-content { padding: 56px 20px 40px; }
+  .hero-stats { gap: 24px; }
+  .ask-box { padding: 24px; }
+  .ask-form { flex-direction: column; }
+  .ask-btn { padding: 14px; }
+  .result-card { padding: 24px; }
+  .result-answer { font-size: 1.15rem; }
+  .section-header { padding: 48px 20px 20px; }
+  .topics-grid { padding: 0 20px 48px; }
+  .topic-card { padding: 22px 20px 20px; }
+  .timeline { padding: 0 20px 48px; }
+}
 </style>
 </head>
 <body>
-<main>
-  <h1>Black history, asked and sourced</h1>
-  <p class="intro">Ask about the history of Black people, from the Atlantic slave trade to the civil rights movement and the end of apartheid. Answers come only from 22 encyclopedia articles, and every fact is footnoted so you can read the source.</p>
 
-  <form id="ask-form">
-    <label for="question" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your question</label>
-    <input id="question" type="text" maxlength="500" required autocomplete="off" placeholder="Who led the Haitian Revolution?">
-    <button class="ask" id="ask-button" type="submit">Ask</button>
-  </form>
-  <label class="agent"><input type="checkbox" id="agent"> Let the agent search step by step (slower, can read whole sections)</label>
+<!-- Skip to main content -->
+<a class="skip" href="#ask-section">Skip to Q&A</a>
 
-  <div class="examples">
-    <p>Try one of these</p>
-    <button type="button">When was the Emancipation Proclamation issued?</button>
-    <button type="button">Why did Black Americans move north during the Great Migration?</button>
-    <button type="button">What was the Montgomery bus boycott?</button>
+<!-- ─── HEADER ─── -->
+<header>
+  <nav class="nav-inner">
+    <div class="nav-brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#c9a84c" stroke-width="2"/><path d="M9 14h10M14 9v10" stroke="#c9a84c" stroke-width="2" stroke-linecap="round"/></svg>
+      Black History
+    </div>
+    <ul class="nav-links">
+      <li><a href="#ask-section" class="active">Ask</a></li>
+      <li><a href="#topics">Topics</a></li>
+      <li><a href="#timeline-section">Timeline</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-label">Interactive Knowledge Base</div>
+    <h1>Black History, Asked&nbsp;&amp;&nbsp;Sourced</h1>
+    <p class="hero-desc">
+      Explore the history of Black people across the world — from the Atlantic slave trade and abolitionism,
+      through the civil rights movement, to the end of apartheid. Ask any question and receive a sourced answer
+      drawn from 22 encyclopedia articles. Every fact is footnoted so you can read the original&nbsp;source.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>22</strong><span>Articles</span></div>
+      <div class="hero-stat"><strong>6</strong><span>Categories</span></div>
+      <div class="hero-stat"><strong>100%</strong><span>Sourced</span></div>
+    </div>
   </div>
+</section>
 
-  <section id="result" aria-live="polite"></section>
+<!-- ─── ASK ─── -->
+<div class="section-header" id="ask-section">
+  <h2>Ask a Question</h2>
+</div>
+<section id="ask-area">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px 48px;">
+    <div class="ask-box">
+      <p class="ask-intro">Powered by 22 sourced articles</p>
+      <p class="ask-title">What would you like to know about Black history?</p>
+      <form id="ask-form" class="ask-form">
+        <label for="question" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your question</label>
+        <input id="question" class="ask-input" type="text" maxlength="500" required autocomplete="off" placeholder="e.g. Who led the Haitian Revolution?">
+        <button class="ask-btn" id="ask-button" type="submit">Ask</button>
+      </form>
+      <div class="ask-options">
+        <label class="ask-agent"><input type="checkbox" id="agent"> Agent mode — searches step by step (slower, deeper)</label>
+      </div>
+      <div class="examples-row">
+        <button class="example-chip" type="button">When was the Emancipation Proclamation issued?</button>
+        <button class="example-chip" type="button">Why did Black Americans move north during the Great Migration?</button>
+        <button class="example-chip" type="button">What was the Montgomery bus boycott?</button>
+        <button class="example-chip" type="button">Who was Frederick Douglass?</button>
+        <button class="example-chip" type="button">What did the Voting Rights Act of 1965 do?</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    Sources: 22 articles from English Wikipedia, used under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; each footnote links to its article.
-    Student project for a university course on LLM applications. Answers can be wrong, so check the footnotes.
-  </footer>
-</main>
+<!-- ─── RESULT ─── -->
+<section id="result" aria-live="polite"></section>
 
+<!-- ─── TOPICS ─── -->
+<div class="section-header" id="topics">
+  <h2>Explore Topics</h2>
+</div>
+<div class="topics-grid">
+
+  <!-- Slavery & Abolition -->
+  <article class="topic-card" data-question="What was the Atlantic slave trade?">
+    <span class="topic-tag tag-slavery">Slavery &amp; Abolition</span>
+    <h3>Atlantic Slave Trade</h3>
+    <p>The transatlantic slave trade involved the transportation of enslaved African people by slave traders to the Americas, from the 15th to the 19th century.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was slavery like in the United States?">
+    <span class="topic-tag tag-slavery">Slavery &amp; Abolition</span>
+    <h3>Slavery in the United States</h3>
+    <p>The legal institution of human chattel slavery that existed in the United States from its founding in 1776 until abolished through the Thirteenth Amendment in 1865.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was abolitionism in the United States?">
+    <span class="topic-tag tag-slavery">Slavery &amp; Abolition</span>
+    <h3>Abolitionism in the U.S.</h3>
+    <p>The movement to end slavery in the United States, active from the colonial era through the American Civil War and the ratification of the Thirteenth Amendment.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was the Underground Railroad?">
+    <span class="topic-tag tag-slavery">Slavery &amp; Abolition</span>
+    <h3>Underground Railroad</h3>
+    <p>A network of secret routes and safe houses established to help enslaved African Americans escape to free states and Canada during the early-to-mid 19th century.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <!-- Leaders & Figures -->
+  <article class="topic-card" data-question="Who was Martin Luther King Jr. and what did he accomplish?">
+    <span class="topic-tag tag-leaders">Leaders &amp; Figures</span>
+    <h3>Martin Luther King Jr.</h3>
+    <p>A Baptist minister and civil rights activist who became the most visible leader of the civil rights movement from 1955 until his assassination in 1968.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="Who was Rosa Parks and what did she do?">
+    <span class="topic-tag tag-leaders">Leaders &amp; Figures</span>
+    <h3>Rosa Parks</h3>
+    <p>An activist in the civil rights movement best known for her pivotal role in the Montgomery bus boycott, when she refused to surrender her bus seat to a white passenger.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="Who was Frederick Douglass?">
+    <span class="topic-tag tag-leaders">Leaders &amp; Figures</span>
+    <h3>Frederick Douglass</h3>
+    <p>An American social reformer, abolitionist, orator, writer, and statesman. After escaping from slavery, he became a national leader of the abolitionist movement.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="Who was Harriet Tubman?">
+    <span class="topic-tag tag-leaders">Leaders &amp; Figures</span>
+    <h3>Harriet Tubman</h3>
+    <p>An American abolitionist who escaped from slavery and then made thirteen missions to rescue approximately seventy enslaved people using the Underground Railroad.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="Who was Nelson Mandela and what was his impact?">
+    <span class="topic-tag tag-global">Global</span>
+    <h3>Nelson Mandela</h3>
+    <p>A South African anti-apartheid activist and political leader who served as the first president of South Africa from 1994 to 1999, after spending 27 years in prison.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <!-- Civil Rights -->
+  <article class="topic-card" data-question="What was the civil rights movement?">
+    <span class="topic-tag tag-civil-rights">Civil Rights</span>
+    <h3>Civil Rights Movement</h3>
+    <p>A social movement in the United States from 1954 to 1968 aimed at abolishing legalized racial segregation, discrimination, and disenfranchisement.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was the Montgomery bus boycott?">
+    <span class="topic-tag tag-civil-rights">Civil Rights</span>
+    <h3>Montgomery Bus Boycott</h3>
+    <p>A political and social protest campaign against racial segregation on the public transit system of Montgomery, Alabama, from December 1955 to December 1956.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was the March on Washington?">
+    <span class="topic-tag tag-civil-rights">Civil Rights</span>
+    <h3>March on Washington</h3>
+    <p>The March on Washington for Jobs and Freedom in 1963 was one of the largest political rallies for human rights in US history, where Dr. King delivered his "I Have a Dream" speech.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <!-- Legislation -->
+  <article class="topic-card" data-question="What was the Emancipation Proclamation?">
+    <span class="topic-tag tag-legislation">Legislation</span>
+    <h3>Emancipation Proclamation</h3>
+    <p>A presidential proclamation issued by Abraham Lincoln on January 1, 1863, that changed the legal status of enslaved people in Confederate states from enslaved to free.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was Brown v. Board of Education?">
+    <span class="topic-tag tag-legislation">Legislation</span>
+    <h3>Brown v. Board of Education</h3>
+    <p>A landmark 1954 Supreme Court case in which the justices ruled unanimously that racial segregation of children in public schools was unconstitutional.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What did the Civil Rights Act of 1964 do?">
+    <span class="topic-tag tag-legislation">Legislation</span>
+    <h3>Civil Rights Act of 1964</h3>
+    <p>Landmark legislation that outlawed discrimination based on race, color, religion, sex, and national origin in employment and public accommodations.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What did the Voting Rights Act of 1965 do?">
+    <span class="topic-tag tag-legislation">Legislation</span>
+    <h3>Voting Rights Act of 1965</h3>
+    <p>A landmark piece of federal legislation that prohibits racial discrimination in voting, signed into law by President Lyndon B. Johnson during the height of the civil rights movement.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What were the Jim Crow laws?">
+    <span class="topic-tag tag-legislation">Legislation</span>
+    <h3>Jim Crow Laws</h3>
+    <p>State and local laws enforcing racial segregation in the Southern United States, enacted after the Reconstruction period and lasting until the civil rights movement.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <!-- Movements & Events -->
+  <article class="topic-card" data-question="What was the Reconstruction Era?">
+    <span class="topic-tag tag-civil-rights">Movements</span>
+    <h3>Reconstruction Era</h3>
+    <p>The period following the American Civil War (1865–1877) during which the nation addressed the reintegration of former Confederate states and the status of freedpeople.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was the Great Migration?">
+    <span class="topic-tag tag-civil-rights">Movements</span>
+    <h3>Great Migration</h3>
+    <p>The mass movement of millions of African Americans from the rural South to cities in the North, Midwest and West from roughly 1910 to 1970.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was the Haitian Revolution?">
+    <span class="topic-tag tag-global">Global</span>
+    <h3>Haitian Revolution</h3>
+    <p>A successful insurrection by self-liberated slaves against French colonial rule in Saint-Domingue, resulting in the independent nation of Haiti in 1804.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <article class="topic-card" data-question="What was apartheid in South Africa?">
+    <span class="topic-tag tag-global">Global</span>
+    <h3>Apartheid</h3>
+    <p>A system of institutionalised racial segregation in South Africa from 1948 until the early 1990s, under which the rights of the majority Black inhabitants were curtailed.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+  <!-- Culture -->
+  <article class="topic-card" data-question="What was the Harlem Renaissance?">
+    <span class="topic-tag tag-culture">Culture</span>
+    <h3>Harlem Renaissance</h3>
+    <p>An intellectual, social, and artistic explosion centered in Harlem, New York, spanning the 1920s, considered a golden age in African American culture.</p>
+    <span class="read-arrow">Ask about this →</span>
+  </article>
+
+</div>
+
+<!-- ─── TIMELINE ─── -->
+<div class="section-header" id="timeline-section">
+  <h2>Key Moments</h2>
+</div>
+<div class="timeline">
+  <div class="tl-track">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1619</div>
+      <div class="tl-title">First Enslaved Africans in Virginia</div>
+      <div class="tl-desc">The first recorded arrival of enslaved Africans in the English colony of Virginia marks the beginning of slavery in what would become the United States.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1791–1804</div>
+      <div class="tl-title">Haitian Revolution</div>
+      <div class="tl-desc">Enslaved people in the French colony of Saint-Domingue revolt, leading to the establishment of Haiti — the first free Black republic.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1831</div>
+      <div class="tl-title">Nat Turner's Rebellion</div>
+      <div class="tl-desc">One of the most significant slave rebellions in American history shakes the institution of slavery and intensifies the abolitionist movement.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1863</div>
+      <div class="tl-title">Emancipation Proclamation</div>
+      <div class="tl-desc">President Abraham Lincoln declares enslaved people in Confederate states "shall be then, thenceforward, and forever free."</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1865</div>
+      <div class="tl-title">Thirteenth Amendment</div>
+      <div class="tl-desc">Slavery is formally abolished throughout the United States with the ratification of the Thirteenth Amendment to the Constitution.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1920s</div>
+      <div class="tl-title">Harlem Renaissance</div>
+      <div class="tl-desc">A cultural and intellectual explosion in Harlem, New York, that redefines African American expression in literature, art, music, and thought.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1954</div>
+      <div class="tl-title">Brown v. Board of Education</div>
+      <div class="tl-desc">The Supreme Court unanimously rules that racial segregation in public schools is unconstitutional, dismantling "separate but equal."</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1955</div>
+      <div class="tl-title">Montgomery Bus Boycott</div>
+      <div class="tl-desc">Rosa Parks' arrest sparks a year-long boycott that desegregates Montgomery's buses and launches Martin Luther King Jr. into national prominence.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1963</div>
+      <div class="tl-title">March on Washington</div>
+      <div class="tl-desc">Over 250,000 people gather at the Lincoln Memorial where Dr. King delivers his legendary "I Have a Dream" speech.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1964</div>
+      <div class="tl-title">Civil Rights Act</div>
+      <div class="tl-desc">President Lyndon B. Johnson signs the Civil Rights Act, outlawing discrimination based on race, color, religion, sex, or national origin.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1965</div>
+      <div class="tl-title">Voting Rights Act</div>
+      <div class="tl-desc">The Voting Rights Act prohibits racial discrimination in voting, removing barriers like literacy tests that had disenfranchised Black voters.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1990–1994</div>
+      <div class="tl-title">End of Apartheid</div>
+      <div class="tl-desc">Nelson Mandela is released after 27 years and becomes South Africa's first Black president, ending decades of institutionalized racial segregation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <span>Sources: 22 articles from English Wikipedia, used under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>; each footnote links to its article.</span>
+    <span>Student project for a university course on LLM applications. Answers can be wrong — always check the footnotes.</span>
+  </div>
+</footer>
+
+<!-- ─── SCRIPT ─── -->
 <script>
-  const form = document.getElementById("ask-form");
-  const box = document.getElementById("question");
-  const button = document.getElementById("ask-button");
-  const agent = document.getElementById("agent");
-  const result = document.getElementById("result");
+  const form     = document.getElementById("ask-form");
+  const box      = document.getElementById("question");
+  const button   = document.getElementById("ask-button");
+  const agent    = document.getElementById("agent");
+  const result   = document.getElementById("result");
 
-  const escapeHtml = s => s.replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+  const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
+  /* ── Show loading / error status ── */
   function showStatus(text, isError) {
-    result.innerHTML = "";
-    const p = document.createElement("p");
-    p.className = isError ? "status error" : "status";
-    p.textContent = text;
-    result.appendChild(p);
+    result.innerHTML = `<div style="max-width:1280px;margin:0 auto;padding:0 24px 48px;">
+      <div class="result-card">
+        <p class="result-status ${isError ? "error" : ""}">
+          ${isError ? "" : '<span class="spinner"></span>'}
+          ${esc(text)}
+        </p>
+      </div></div>`;
   }
 
+  /* ── Render an answer with footnotes ── */
   function showAnswer(question, data) {
     const number = new Map(data.sources.map((s, i) => [s.id, i + 1]));
-    // Citations become footnote numbers; citations to unknown sections are dropped.
-    const text = escapeHtml(data.answer)
+    const text = esc(data.answer)
       .replace(/\s*\[([a-z0-9-]+#[a-z0-9-]+)\]/g, (_, id) =>
         number.has(id) ? `<sup><a href="#note-${number.get(id)}" aria-label="Source ${number.get(id)}">${number.get(id)}</a></sup>` : "");
 
-    result.innerHTML = `
-      <p class="asked">${escapeHtml(question)}</p>
-      <p class="answer-text">${text}</p>`;
-    if (!data.sources.length) return;
+    let html = `<div style="max-width:1280px;margin:0 auto;padding:0 24px 48px;">
+      <div class="result-card">
+        <p class="result-question">${esc(question)}</p>
+        <p class="result-answer">${text}</p>`;
 
-    const notes = document.createElement("ol");
-    notes.className = "notes";
-    notes.setAttribute("aria-label", "Sources");
-    data.sources.forEach((s, i) => {
-      const li = document.createElement("li");
-      li.id = `note-${i + 1}`;
-      const link = document.createElement("a");
-      link.className = "title";
-      link.href = s.url;
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.textContent = s.title;
-      const toggle = document.createElement("button");
-      toggle.type = "button";
-      toggle.className = "show";
-      toggle.textContent = "Show passage";
-      toggle.setAttribute("aria-expanded", "false");
-      const excerpt = document.createElement("p");
-      excerpt.className = "excerpt";
-      excerpt.hidden = true;
-      excerpt.textContent = s.text;
-      toggle.addEventListener("click", () => {
-        const open = toggle.getAttribute("aria-expanded") === "true";
-        toggle.setAttribute("aria-expanded", String(!open));
-        toggle.textContent = open ? "Show passage" : "Hide passage";
-        excerpt.hidden = open;
+    if (data.sources.length) {
+      html += `<p class="sources-title">Sources</p><ol class="source-list">`;
+      data.sources.forEach((s, i) => {
+        const n = i + 1;
+        html += `<li class="source-item" id="note-${n}">
+          <span class="source-num">${n}</span>
+          <div class="source-body">
+            <a class="source-link" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>
+            <button type="button" class="source-toggle" aria-expanded="false" onclick="toggleExcerpt(this)">Show passage</button>
+            <p class="source-excerpt" hidden>${esc(s.text)}</p>
+          </div>
+        </li>`;
       });
-      li.append(link, toggle, excerpt);
-      notes.appendChild(li);
-    });
-    result.appendChild(notes);
+      html += `</ol>`;
+    }
+    html += `</div></div>`;
+    result.innerHTML = html;
   }
 
+  function toggleExcerpt(btn) {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    btn.textContent = open ? "Show passage" : "Hide passage";
+    btn.nextElementSibling.hidden = open;
+  }
+
+  /* ── Ask ── */
   async function ask(question) {
     const mode = agent.checked ? "agent" : "rag";
     button.disabled = true;
     showStatus(mode === "agent" ? "Searching the articles step by step…" : "Looking it up…");
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+
     const slow = setTimeout(() => showStatus(
       "Still working. The first question after a quiet period can take up to a minute while the server starts."
     ), 8000);
+
     try {
       const res = await fetch("/ask", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({question, mode})
+        body: JSON.stringify({ question, mode })
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -252,15 +906,55 @@
     }
   }
 
+  /* ── Events ── */
   form.addEventListener("submit", e => {
     e.preventDefault();
     const q = box.value.trim();
     if (q.length >= 3) ask(q);
   });
-  document.querySelectorAll(".examples button").forEach(b => b.addEventListener("click", () => {
+
+  // Example chips
+  document.querySelectorAll(".example-chip").forEach(b => b.addEventListener("click", () => {
     box.value = b.textContent;
     ask(b.textContent);
   }));
+
+  // Topic cards — clicking fills the question box and asks
+  document.querySelectorAll(".topic-card[data-question]").forEach(card => {
+    card.addEventListener("click", () => {
+      const q = card.dataset.question;
+      box.value = q;
+      ask(q);
+      document.getElementById("ask-section").scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+        // Update active state
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        this.classList.add('active');
+      }
+    });
+  });
+
+  // Update nav active on scroll
+  const sections = ['ask-section', 'topics', 'timeline-section'];
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 120) current = id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }, { passive: true });
 </script>
 </body>
 </html>
