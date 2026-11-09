@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Black history, asked and sourced</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eef1ec;
+    --card: #ffffff;
+    --ink: #1e2620;
+    --muted: #5b675e;
+    --line: #cfd6cf;
+    --teal: #1f6f66;
+    --umber: #8a5a2b;
+    --error: #a3352b;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #141a16;
+      --card: #1c241f;
+      --ink: #e4eae5;
+      --muted: #9aa89e;
+      --line: #2f3b33;
+      --teal: #6cc3b6;
+      --umber: #d9a86c;
+      --error: #e58a80;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans); }
+  main { max-width: 720px; margin: 0 auto; padding: 64px 20px 40px; }
+
+  h1 { font: 600 clamp(2rem, 6vw, 3rem)/1.08 var(--serif); letter-spacing: -0.015em; margin: 0 0 14px; max-width: 14em; }
+  .intro { margin: 0 0 36px; color: var(--muted); max-width: 36em; }
+
+  form { display: flex; gap: 8px; }
+  input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 14px;
+    font: 17px var(--sans);
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  button.ask {
+    padding: 0 22px;
+    font: 600 15px var(--sans);
+    color: var(--card);
+    background: var(--teal);
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button.ask:disabled { opacity: 0.55; cursor: progress; }
+  input:focus-visible, button:focus-visible, a:focus-visible {
+    outline: 3px solid var(--teal);
+    outline-offset: 2px;
+  }
+
+  .agent { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 14px; color: var(--muted); }
+  .agent input { accent-color: var(--teal); width: 16px; height: 16px; }
+
+  .examples { margin: 28px 0 0; padding: 0; list-style: none; }
+  .examples p { margin: 0 0 6px; font-size: 14px; color: var(--muted); }
+  .examples button {
+    display: block;
+    padding: 3px 0;
+    font: 15px var(--sans);
+    text-align: left;
+    color: var(--teal);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+  }
+  .examples button:hover { text-decoration-color: var(--teal); }
+
+  #result { margin-top: 48px; }
+  .status { color: var(--muted); }
+  .error { color: var(--error); }
+
+  .asked { margin: 0 0 8px; font-size: 14px; color: var(--muted); }
+  .answer-text { margin: 0; font: 1.4rem/1.55 var(--serif); }
+  .answer-text sup a {
+    font: 600 0.62em var(--sans);
+    color: var(--umber);
+    text-decoration: none;
+    padding: 0 1px;
+  }
+
+  /* Footnotes: the sources behind the answer, like the notes at the end of a history book. */
+  .notes { margin: 28px 0 0; padding: 18px 0 0 22px; border-top: 1px solid var(--line); font-size: 15px; }
+  .notes li { margin-bottom: 14px; padding-left: 4px; }
+  .notes li::marker { font: 600 13px var(--sans); color: var(--umber); }
+  .notes a.title { color: var(--ink); font-weight: 500; text-decoration-color: var(--line); text-underline-offset: 3px; }
+  .notes a.title:hover { text-decoration-color: var(--ink); }
+  .notes button.show {
+    margin-left: 8px;
+    padding: 0;
+    font: 13px var(--sans);
+    color: var(--teal);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .excerpt {
+    margin: 10px 0 0;
+    padding: 4px 0 4px 16px;
+    border-left: 2px solid var(--umber);
+    font: 16px/1.65 var(--serif);
+    white-space: pre-wrap;
+  }
+  .excerpt[hidden] { display: none; }
+  :target { scroll-margin-top: 24px; }
+
+  footer { margin-top: 72px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  footer a { color: var(--teal); }
+
+  @media (max-width: 520px) {
+    main { padding-top: 36px; }
+    form { flex-direction: column; }
+    button.ask { padding: 12px; }
+    .answer-text { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Black history, asked and sourced</h1>
+  <p class="intro">Ask about the history of Black people, from the Atlantic slave trade to the civil rights movement and the end of apartheid. Answers come only from 22 encyclopedia articles, and every fact is footnoted so you can read the source.</p>
+
+  <form id="ask-form">
+    <label for="question" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Your question</label>
+    <input id="question" type="text" maxlength="500" required autocomplete="off" placeholder="Who led the Haitian Revolution?">
+    <button class="ask" id="ask-button" type="submit">Ask</button>
+  </form>
+  <label class="agent"><input type="checkbox" id="agent"> Let the agent search step by step (slower, can read whole sections)</label>
+
+  <div class="examples">
+    <p>Try one of these</p>
+    <button type="button">When was the Emancipation Proclamation issued?</button>
+    <button type="button">Why did Black Americans move north during the Great Migration?</button>
+    <button type="button">What was the Montgomery bus boycott?</button>
+  </div>
+
+  <section id="result" aria-live="polite"></section>
+
+  <footer>
+    Sources: 22 articles from English Wikipedia, used under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; each footnote links to its article.
+    Student project for a university course on LLM applications. Answers can be wrong, so check the footnotes.
+  </footer>
+</main>
+
+<script>
+  const form = document.getElementById("ask-form");
+  const box = document.getElementById("question");
+  const button = document.getElementById("ask-button");
+  const agent = document.getElementById("agent");
+  const result = document.getElementById("result");
+
+  const escapeHtml = s => s.replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+
+  function showStatus(text, isError) {
+    result.innerHTML = "";
+    const p = document.createElement("p");
+    p.className = isError ? "status error" : "status";
+    p.textContent = text;
+    result.appendChild(p);
+  }
+
+  function showAnswer(question, data) {
+    const number = new Map(data.sources.map((s, i) => [s.id, i + 1]));
+    // Citations become footnote numbers; citations to unknown sections are dropped.
+    const text = escapeHtml(data.answer)
+      .replace(/\s*\[([a-z0-9-]+#[a-z0-9-]+)\]/g, (_, id) =>
+        number.has(id) ? `<sup><a href="#note-${number.get(id)}" aria-label="Source ${number.get(id)}">${number.get(id)}</a></sup>` : "");
+
+    result.innerHTML = `
+      <p class="asked">${escapeHtml(question)}</p>
+      <p class="answer-text">${text}</p>`;
+    if (!data.sources.length) return;
+
+    const notes = document.createElement("ol");
+    notes.className = "notes";
+    notes.setAttribute("aria-label", "Sources");
+    data.sources.forEach((s, i) => {
+      const li = document.createElement("li");
+      li.id = `note-${i + 1}`;
+      const link = document.createElement("a");
+      link.className = "title";
+      link.href = s.url;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = s.title;
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "show";
+      toggle.textContent = "Show passage";
+      toggle.setAttribute("aria-expanded", "false");
+      const excerpt = document.createElement("p");
+      excerpt.className = "excerpt";
+      excerpt.hidden = true;
+      excerpt.textContent = s.text;
+      toggle.addEventListener("click", () => {
+        const open = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!open));
+        toggle.textContent = open ? "Show passage" : "Hide passage";
+        excerpt.hidden = open;
+      });
+      li.append(link, toggle, excerpt);
+      notes.appendChild(li);
+    });
+    result.appendChild(notes);
+  }
+
+  async function ask(question) {
+    const mode = agent.checked ? "agent" : "rag";
+    button.disabled = true;
+    showStatus(mode === "agent" ? "Searching the articles step by step…" : "Looking it up…");
+    const slow = setTimeout(() => showStatus(
+      "Still working. The first question after a quiet period can take up to a minute while the server starts."
+    ), 8000);
+    try {
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({question, mode})
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showStatus(typeof data.detail === "string" ? data.detail : "Questions must be 3 to 500 characters long.", true);
+        return;
+      }
+      showAnswer(question, data);
+    } catch (e) {
+      showStatus("Couldn't reach the server. Check your connection and try again.", true);
+    } finally {
+      clearTimeout(slow);
+      button.disabled = false;
+    }
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const q = box.value.trim();
+    if (q.length >= 3) ask(q);
+  });
+  document.querySelectorAll(".examples button").forEach(b => b.addEventListener("click", () => {
+    box.value = b.textContent;
+    ask(b.textContent);
+  }));
+</script>
+</body>
+</html>

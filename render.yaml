@@ -1,0 +1,21 @@
+# Render blueprint: https://render.com/docs/blueprint-spec
+# The corpus is committed (data/processed/sections.jsonl), so the build only installs packages.
+services:
+  - type: web
+    name: black-history-qa
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: OPENAI_API_KEY
+        sync: false      # entered in the Render dashboard, never committed
+      - key: OPENAI_BASE_URL
+        sync: false
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "6"
+      - key: DAILY_LIMIT
+        value: "300"
